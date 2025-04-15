@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 
-const app = new Hono().basePath('/api')
+const app = new Hono({ strict: false }).basePath('/api')
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
@@ -16,6 +16,12 @@ const movies = [
 
 app.get('/movies', (c) => {
   return c.json(movies)
+})
+
+app.get('/movies/:id', (c) => {
+  const id = parseInt(c.req.param('id'))
+  const movie = movies.find((m) => m.id === id)
+  return movie ? c.json(movie) : c.notFound()
 })
 
 export default app
